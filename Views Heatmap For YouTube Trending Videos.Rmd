@@ -1,0 +1,122 @@
+---
+title: "DataRes Visualizations"
+author: "Aaron Lee"
+date: "October 23, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message = FALSE}
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(scales)
+library(tidyverse)
+library(RColorBrewer)
+```
+
+```{r message = FALSE}
+df <- read_csv("USvideos.csv")
+
+data <- mutate(df, formatted_trending_date = ydm(trending_date), publish_date = as.Date(format(df$publish_time, "%Y-%m-%d")))
+
+data_frame <- mutate(data, trending_month = month(formatted_trending_date), trending_day = day(formatted_trending_date), trending_year = year(formatted_trending_date), publish_month = month(publish_time), publish_day = day(publish_time), publish_year = year(publish_time))
+
+youtube <- data_frame[data_frame$category_id == "24",]
+
+sum <- youtube[order(youtube$title), ] %>% group_by(title) %>% mutate(change = views - lag(views))
+
+clean_sum <- na.omit(sum)
+
+views <- tapply(clean_sum$change, clean_sum$formatted_trending_date, mean)
+
+final <- data.frame(key = names(views), value = views)
+
+final_data <- mutate(final, month = month.name[month(final$key)], day = day(final$key), year = year(final$key))
+```
+
+```{r}
+ggplot(data = final_data, aes(x = month, y = day, fill = value)) +
+  geom_tile(color = "white") +
+  scale_fill_gradientn(colours = brewer.pal(5, "Blues"), labels = comma) +
+  scale_x_discrete(limits = c("November", "December", "January", "February", "March", "April", "May", "June")) +
+  scale_y_continuous(breaks = 1:31, labels = 1:31) + 
+  ggtitle("Views for Trending Entertainment YouTube Videos") +
+  labs(x = "Month", y = "Day", fill = "Total View Count") +
+  theme(axis.text = element_text(size = 8), axis.title = element_text(size = 12), 
+        plot.title = element_text(size = 16)) +
+  theme(plot.title = element_text(hjust = 0.5), legend.title = element_text(hjust = 0.5)) +
+  theme(panel.background = element_rect(fill = "white"))
+```
+
+```{r message = FALSE}
+df <- read_csv("USvideos.csv")
+
+data <- mutate(df, formatted_trending_date = ydm(trending_date), publish_date = as.Date(format(df$publish_time, "%Y-%m-%d")))
+
+data_frame <- mutate(data, trending_month = month(formatted_trending_date), trending_day = day(formatted_trending_date), trending_year = year(formatted_trending_date), publish_month = month(publish_time), publish_day = day(publish_time), publish_year = year(publish_time))
+
+youtube <- data_frame[data_frame$category_id == "10",]
+
+sum <- youtube[order(youtube$title), ] %>% group_by(title) %>% mutate(change = views - lag(views))
+
+clean_sum <- na.omit(sum)
+
+views <- tapply(clean_sum$change, clean_sum$formatted_trending_date, mean)
+
+final <- data.frame(key = names(views), value = views)
+
+final_data <- mutate(final, month = month.name[month(final$key)], day = day(final$key), year = year(final$key))
+```
+
+```{r}
+ggplot(data = final_data, aes(x = month, y = day, fill = value)) +
+  geom_tile(color = "white") +
+  scale_fill_gradientn(colours = brewer.pal(5, "Blues"), labels = comma) +
+  scale_x_discrete(limits = c("November", "December", "January", "February", "March", "April", "May", "June")) +
+  scale_y_continuous(breaks = 1:31, labels = 1:31) + 
+  ggtitle("Views for Trending Music YouTube Videos") +
+  labs(x = "Month", y = "Day", fill = "Total View Count") +
+  theme(axis.text = element_text(size = 8), axis.title = element_text(size = 12), 
+        plot.title = element_text(size = 16)) +
+  theme(plot.title = element_text(hjust = 0.5), legend.title = element_text(hjust = 0.5)) +
+  theme(panel.background = element_rect(fill = "white"))
+```
+
+```{r message = FALSE}
+df <- read_csv("USvideos.csv")
+
+data <- mutate(df, formatted_trending_date = ydm(trending_date), publish_date = as.Date(format(df$publish_time, "%Y-%m-%d")))
+
+data_frame <- mutate(data, trending_month = month(formatted_trending_date), trending_day = day(formatted_trending_date), trending_year = year(formatted_trending_date), publish_month = month(publish_time), publish_day = day(publish_time), publish_year = year(publish_time))
+
+youtube <- data_frame[data_frame$category_id == "26",]
+
+sum <- youtube[order(youtube$title), ] %>% group_by(title) %>% mutate(change = views - lag(views))
+
+clean_sum <- na.omit(sum)
+
+views <- tapply(clean_sum$change, clean_sum$formatted_trending_date, mean)
+
+final <- data.frame(key = names(views), value = views)
+
+final_data <- mutate(final, month = month.name[month(final$key)], day = day(final$key), year = year(final$key))
+```
+
+```{r}
+ggplot(data = final_data, aes(x = month, y = day, fill = value)) +
+  geom_tile(color = "white") +
+  scale_fill_gradientn(colours = brewer.pal(5, "Blues"), labels = comma) +
+  scale_x_discrete(limits = c("November", "December", "January", "February", "March", "April", "May", "June")) +
+  scale_y_continuous(breaks = 1:31, labels = 1:31) + 
+  ggtitle("Views for Trending How-To and Style YouTube Videos") +
+  labs(x = "Month", y = "Day", fill = "Total View Count") +
+  theme(axis.text = element_text(size = 8), axis.title = element_text(size = 12), 
+        plot.title = element_text(size = 16)) +
+  theme(plot.title = element_text(hjust = 0.5), legend.title = element_text(hjust = 0.5)) +
+  theme(panel.background = element_rect(fill = "white"))
+```
